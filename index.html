@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Desktop</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0f14;
+      --surface:   #13161e;
+      --surface2:  #1a1e2a;
+      --border:    #252a38;
+      --accent:    #4f8ef7;
+      --accent2:   #7dd3b0;
+      --text:      #e2e6f0;
+      --muted:     #6b7391;
+      --danger:    #f76f6f;
+      --folder-bg: #1e2334;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Background grid ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Glow orbs ── */
+    body::after {
+      content: '';
+      position: fixed;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(79,142,247,0.07) 0%, transparent 70%);
+      top: -150px; left: -100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb2 {
+      position: fixed;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(125,211,176,0.06) 0%, transparent 70%);
+      bottom: -100px; right: -80px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top Bar ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 56px;
+      background: rgba(19,22,30,0.85);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+
+    .topbar-brand .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .topbar-clock {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .topbar-clock span {
+      color: var(--accent2);
+      margin-left: 12px;
+    }
+
+    /* ── Main content ── */
+    .main {
+      flex: 1;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    /* ── Section headers ── */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Quick Launch ── */
+    .launch-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .launch-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .launch-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(79,142,247,0.06), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .launch-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(79,142,247,0.15);
+    }
+
+    .launch-btn:hover::before { opacity: 1; }
+
+    .launch-btn .icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .launch-btn .lbl { display: flex; flex-direction: column; }
+    .launch-btn .lbl small {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 400;
+      margin-top: 1px;
+    }
+
+    /* Icon backgrounds */
+    .ic-gdrive  { background: rgba(66,133,244,0.15); }
+    .ic-onedrive{ background: rgba(0,120,212,0.15); }
+    .ic-bitwarden{ background: rgba(35,195,135,0.15); }
+    .ic-gmail   { background: rgba(234,67,53,0.15); }
+    .ic-outlook { background: rgba(0,120,212,0.15); }
+
+    /* ── Bookmarks ── */
+    .folders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .folder {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .folder:hover { border-color: var(--accent2); }
+
+    .folder-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--folder-bg);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .folder-header .f-icon { font-size: 16px; }
+
+    .folder-header .f-name {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      flex: 1;
+    }
+
+    .folder-header .chevron {
+      font-size: 10px;
+      color: var(--muted);
+      transition: transform 0.2s;
+    }
+
+    .folder.open .chevron { transform: rotate(180deg); }
+
+    .folder-links {
+      display: none;
+      flex-direction: column;
+    }
+
+    .folder.open .folder-links { display: flex; }
+
+    .folder-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .folder-link:last-child { border-bottom: none; }
+
+    .folder-link:hover {
+      background: var(--surface2);
+      color: var(--accent2);
+    }
+
+    .folder-link .fav {
+      width: 16px; height: 16px;
+      border-radius: 3px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .folder-link .fav-fallback {
+      width: 16px; height: 16px;
+      border-radius: 3px;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      flex-shrink: 0;
+      color: var(--muted);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Fade-in animation ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up:nth-child(1) { animation-delay: 0.05s; }
+    .fade-up:nth-child(2) { animation-delay: 0.15s; }
+    .fade-up:nth-child(3) { animation-delay: 0.25s; }
+    .fade-up:nth-child(4) { animation-delay: 0.35s; }
+    .fade-up:nth-child(5) { animation-delay: 0.45s; }
+  </style>
+</head>
+<body>
+
+<div class="orb2"></div>
+
+<div class="shell">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="dot"></div>
+      MY DESKTOP
+    </div>
+    <div class="topbar-clock" id="clock">--:-- <span>---</span></div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- QUICK LAUNCH -->
+    <section>
+      <div class="section-label">Quick Launch</div>
+      <div class="launch-grid">
+
+        <a class="launch-btn fade-up" href="https://drive.google.com" target="_blank" rel="noopener">
+          <div class="icon ic-gdrive">📁</div>
+          <div class="lbl">Google Drive<small>My files &amp; docs</small></div>
+        </a>
+
+        <a class="launch-btn fade-up" href="https://onedrive.live.com" target="_blank" rel="noopener">
+          <div class="icon ic-onedrive">☁️</div>
+          <div class="lbl">OneDrive<small>Microsoft files</small></div>
+        </a>
+
+        <a class="launch-btn fade-up" href="https://vault.bitwarden.com" target="_blank" rel="noopener">
+          <div class="icon ic-bitwarden">🔐</div>
+          <div class="lbl">Bitwarden<small>Password vault</small></div>
+        </a>
+
+        <a class="launch-btn fade-up" href="https://mail.google.com" target="_blank" rel="noopener">
+          <div class="icon ic-gmail">📧</div>
+          <div class="lbl">Gmail<small>Google mail</small></div>
+        </a>
+
+        <a class="launch-btn fade-up" href="https://outlook.live.com" target="_blank" rel="noopener">
+          <div class="icon ic-outlook">📨</div>
+          <div class="lbl">Outlook<small>Microsoft mail</small></div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- BOOKMARKS -->
+    <section>
+      <div class="section-label">Bookmarks</div>
+      <div class="folders-grid">
+
+        <!-- FOLDER 1: News & Info -->
+        <div class="folder open">
+          <div class="folder-header" onclick="toggleFolder(this)">
+            <span class="f-icon">📰</span>
+            <span class="f-name">News &amp; Info</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="folder-links">
+            <a class="folder-link" href="https://www.bbc.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">B</div> BBC News
+            </a>
+            <a class="folder-link" href="https://news.ycombinator.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">H</div> Hacker News
+            </a>
+            <a class="folder-link" href="https://www.reuters.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">R</div> Reuters
+            </a>
+          </div>
+        </div>
+
+        <!-- FOLDER 2: Work Tools -->
+        <div class="folder open">
+          <div class="folder-header" onclick="toggleFolder(this)">
+            <span class="f-icon">🛠️</span>
+            <span class="f-name">Work Tools</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="folder-links">
+            <a class="folder-link" href="https://calendar.google.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">G</div> Google Calendar
+            </a>
+            <a class="folder-link" href="https://meet.google.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">M</div> Google Meet
+            </a>
+            <a class="folder-link" href="https://trello.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">T</div> Trello
+            </a>
+          </div>
+        </div>
+
+        <!-- FOLDER 3: Development -->
+        <div class="folder open">
+          <div class="folder-header" onclick="toggleFolder(this)">
+            <span class="f-icon">💻</span>
+            <span class="f-name">Development</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="folder-links">
+            <a class="folder-link" href="https://github.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">G</div> GitHub
+            </a>
+            <a class="folder-link" href="https://stackoverflow.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">S</div> Stack Overflow
+            </a>
+            <a class="folder-link" href="https://developer.mozilla.org" target="_blank" rel="noopener">
+              <div class="fav-fallback">M</div> MDN Web Docs
+            </a>
+          </div>
+        </div>
+
+        <!-- FOLDER 4: Reference -->
+        <div class="folder open">
+          <div class="folder-header" onclick="toggleFolder(this)">
+            <span class="f-icon">📚</span>
+            <span class="f-name">Reference</span>
+            <span class="chevron">▼</span>
+          </div>
+          <div class="folder-links">
+            <a class="folder-link" href="https://www.wikipedia.org" target="_blank" rel="noopener">
+              <div class="fav-fallback">W</div> Wikipedia
+            </a>
+            <a class="folder-link" href="https://translate.google.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">T</div> Google Translate
+            </a>
+            <a class="folder-link" href="https://www.wolframalpha.com" target="_blank" rel="noopener">
+              <div class="fav-fallback">W</div> Wolfram Alpha
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    MY DESKTOP &nbsp;·&nbsp; stateless &nbsp;·&nbsp; incognito-safe &nbsp;·&nbsp; hosted on github pages
+  </footer>
+
+</div>
+
+<script>
+  // Clock
+  function updateClock() {
+    const now = new Date();
+    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const date = now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+    document.getElementById('clock').innerHTML = time + ' <span>' + date + '</span>';
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Folder toggle
+  function toggleFolder(header) {
+    const folder = header.closest('.folder');
+    folder.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
