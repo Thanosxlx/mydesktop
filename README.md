@@ -163,7 +163,4 @@ Replace any part of it. The &nbsp;·&nbsp; is just a spaced dot separator.
 - If something breaks, click the History tab on GitHub to restore a previous version
 - After saving, wait 1 minute then do Ctrl+Shift+R to force refresh
 - Test on both desktop and mobile after any change
-# mydesktop
-
-
-
+ 
