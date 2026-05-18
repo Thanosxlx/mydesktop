@@ -16,7 +16,7 @@
       --accent:    #4f8ef7;
       --accent2:   #7dd3b0;
       --text:      #e2e6f0;
-      --muted:     #6b7391;
+      --muted:     #a0a8c0;
       --danger:    #f76f6f;
       --folder-bg: #1e2334;
     }
@@ -114,14 +114,31 @@
 
     .topbar-clock {
       font-family: 'DM Mono', monospace;
-      font-size: 13px;
-      color: var(--muted);
+      color: var(--text);
       letter-spacing: 0.08em;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      line-height: 1.4;
     }
 
-    .topbar-clock span {
+    .topbar-clock .clock-date {
+      font-size: 11px;
       color: var(--accent2);
-      margin-left: 12px;
+      letter-spacing: 0.1em;
+    }
+
+    .topbar-clock .clock-time {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    @media (max-width: 480px) {
+      .topbar { padding: 0 16px; height: 64px; }
+      .topbar-clock .clock-date { font-size: 10px; }
+      .topbar-clock .clock-time { font-size: 14px; }
     }
 
     /* ── Main content ── */
@@ -155,23 +172,27 @@
 
     /* ── Quick Launch ── */
     .launch-grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .launch-grid { grid-template-columns: 1fr 1fr; }
     }
 
     .launch-btn {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 14px 22px;
+      padding: 16px 18px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
       text-decoration: none;
       color: var(--text);
       font-family: 'Syne', sans-serif;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -208,10 +229,10 @@
 
     .launch-btn .lbl { display: flex; flex-direction: column; }
     .launch-btn .lbl small {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       font-weight: 400;
-      margin-top: 1px;
+      margin-top: 2px;
     }
 
     /* Icon backgrounds */
@@ -249,17 +270,17 @@
       user-select: none;
     }
 
-    .folder-header .f-icon { font-size: 16px; }
+    .folder-header .f-icon { font-size: 18px; }
 
     .folder-header .f-name {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 700;
       letter-spacing: 0.03em;
       flex: 1;
     }
 
     .folder-header .chevron {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--muted);
       transition: transform 0.2s;
     }
@@ -277,10 +298,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 16px;
+      padding: 12px 16px;
       text-decoration: none;
       color: var(--text);
-      font-size: 13px;
+      font-size: 15px;
       border-bottom: 1px solid var(--border);
       transition: background 0.15s;
     }
@@ -352,7 +373,10 @@
       <div class="dot"></div>
       MY DESKTOP
     </div>
-    <div class="topbar-clock" id="clock">--:-- <span>---</span></div>
+    <div class="topbar-clock" id="clock">
+      <div class="clock-date">---</div>
+      <div class="clock-time">--:--</div>
+    </div>
   </header>
 
   <!-- MAIN -->
@@ -493,7 +517,8 @@
     const now = new Date();
     const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const date = now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
-    document.getElementById('clock').innerHTML = time + ' <span>' + date + '</span>';
+    document.querySelector('#clock .clock-date').textContent = date;
+    document.querySelector('#clock .clock-time').textContent = time;
   }
   updateClock();
   setInterval(updateClock, 1000);
