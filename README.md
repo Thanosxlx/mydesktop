@@ -1,5 +1,7 @@
 # MY DESKTOP — Edit Cheat Sheet
 A quick reference for maintaining your index.html file on GitHub.
+The site is hosted on **Cloudflare Pages** and lives at:
+**https://mydesktop-5cx.pages.dev/**
 
 ---
 
@@ -8,7 +10,23 @@ A quick reference for maintaining your index.html file on GitHub.
 2. Click index.html → click the pencil icon ✏️ (top right)
 3. Make your changes
 4. Scroll down → click "Commit changes" → "Commit changes" again
-5. Wait ~1 minute → hard refresh your site with Ctrl+Shift+R
+5. Wait ~1 minute → Cloudflare Pages builds and deploys automatically
+6. Hard refresh your site with Ctrl+Shift+R
+
+---
+
+## WHERE THE SITE LIVES
+- **URL:** https://mydesktop-5cx.pages.dev/  (this is the permanent production address)
+- **Hosting:** Cloudflare Pages (previously GitHub Pages — old github.io address is dead)
+- **Auto-deploy:** every commit to `main` triggers a new deploy automatically
+
+---
+
+## HOW TO CHECK IF A DEPLOY FINISHED
+- **Cloudflare Dashboard:** dash.cloudflare.com → Workers & Pages → mydesktop → Deployments tab
+  - A new entry appears with a ✔ and a timestamp — when it says "Success", the site is updated
+- **Rollback (if something breaks):** Deployments tab → pick an older deployment → "Rollback to this deployment"
+- **History (in GitHub):** the History tab on GitHub still lets you browse/restore previous versions of index.html
 
 ---
 
@@ -154,6 +172,7 @@ Find this line near the bottom of the HTML:
   MY DESKTOP &nbsp;·&nbsp; stateless &nbsp;·&nbsp; incognito-safe &nbsp;·&nbsp; hosted on github pages
 
 Replace any part of it. The &nbsp;·&nbsp; is just a spaced dot separator.
+(Consider updating "hosted on github pages" to "hosted on Cloudflare Pages" if you edit this line.)
 
 ---
 
@@ -161,6 +180,6 @@ Replace any part of it. The &nbsp;·&nbsp; is just a spaced dot separator.
 - Always work on GitHub's web editor — no software needed
 - Use Ctrl+F in the editor to find text quickly
 - If something breaks, click the History tab on GitHub to restore a previous version
-- After saving, wait 1 minute then do Ctrl+Shift+R to force refresh
+- After committing, wait 1 minute then do Ctrl+Shift+R to force refresh
+- Check the Cloudflare Dashboard Deployments tab to confirm the deploy succeeded
 - Test on both desktop and mobile after any change
- 
