@@ -169,7 +169,7 @@ Change the text to anything you like, for example:
 ## 6. FOOTER TEXT
 Find this line near the bottom of the HTML:
 
-  MY DESKTOP &nbsp;·&nbsp; stateless &nbsp;·&nbsp; incognito-safe &nbsp;·&nbsp; hosted on github pages
+  MY DESKTOP &nbsp;·&nbsp; thanosxlx &nbsp;·&nbsp; incognito-safe &nbsp;·&nbsp; hosted by CloudFlare
 
 Replace any part of it. The &nbsp;·&nbsp; is just a spaced dot separator.
 (Consider updating "hosted on github pages" to "hosted on Cloudflare Pages" if you edit this line.)
